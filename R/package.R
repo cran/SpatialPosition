@@ -1,7 +1,13 @@
 #' @title Spatial Position Package
 #' @name SpatialPosition
-#' @description Computes spatial position models: Stewart 
-#' potentials, Reilly catchment areas, Huff catchment areas.
+#' @description Computes spatial position models: \itemize{
+#' \item{Stewart potentials,}
+#' \item{Reilly catchment areas,} 
+#' \item{Huff catchment areas.}
+#' }
+#' An introduction to the package conceptual background and usage 
+#' (see \code{vignette(topic = "SpatialPosition")}) an a Stewart potentials 
+#' use case (see \code{vignette(topic = "StewartExample")}) are proposed in vignettes.
 #' @seealso  \link{stewart}, \link{rasterStewart}, \link{plotStewart}, 
 #' \link{contourStewart}, \link{huff}, \link{rasterHuff}, \link{plotHuff},\link{reilly}, 
 #' \link{rasterReilly}, \link{plotReilly}, 

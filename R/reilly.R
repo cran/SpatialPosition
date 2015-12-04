@@ -12,7 +12,7 @@
 #' @param varname character; name of the variable in the \code{knownpts} dataframe from which values are computed.
 #' Quantitative variable with no negative values. 
 #' @param typefct character; spatial interaction function. Options are "pareto" 
-#' (default, means power law) or "exponential".
+#' (means power law) or "exponential".
 #' If "pareto" the interaction is defined as: (1 + alpha * mDistance) ^ (-beta).
 #' If "exponential" the interaction is defined as: 
 #' exp(- alpha * mDistance ^ beta).
@@ -169,9 +169,10 @@ rasterReilly <- function(x ,mask = NULL){
 #' plotReilly(x = myreillyraster)
 #' @import sp
 #' @import raster
+#' @importFrom grDevices rainbow
 #' @export
 plotReilly <- function(x, add = FALSE, 
-                       col =  rainbow){
+                       col = rainbow){
   nclass <- nrow(unique(levels(x)[[1]]))
   colorReilly <- col(n = nclass)
   plot(x, legend = FALSE, axes = FALSE,

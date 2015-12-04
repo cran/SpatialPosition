@@ -1,4 +1,4 @@
-## ----, fig.width=5, fig.height=5-----------------------------------------
+## ---- fig.width=5, fig.height=5------------------------------------------
 library(SpatialPosition)
 data(spatData)
 
@@ -31,7 +31,7 @@ mtext(text = "Potential nb. of beds
 
 
 
-## ----, fig.width=5, fig.height=5-----------------------------------------
+## ---- fig.width=5, fig.height=5------------------------------------------
 row.names(spatPts)
 catchReilly <- reilly(knownpts = spatPts, varname = "Capacite",
                       typefct = "exponential", span = 750, beta = 2,
@@ -49,7 +49,7 @@ mtext("Catchment Areas of Public Hospitals", side = 3,cex = 1.5)
 mtext(text = "distance function: exponential, span = 0.75 km, beta = 2",
       side = 1, line = 0) 
 
-## ----, fig.width=5, fig.height=5-----------------------------------------
+## ---- fig.width=5, fig.height=5------------------------------------------
 ###
 catchHuff <- huff(knownpts = spatPts, varname = "Capacite",
                   typefct = "exponential", span = 750, beta = 2,
