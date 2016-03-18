@@ -11,13 +11,14 @@ Computes spatial position models: \itemize{
 \item{Reilly catchment areas,} 
 \item{Huff catchment areas.}
 }
-An introduction to the package conceptual background and usage 
-(see \code{vignette(topic = "SpatialPosition")}) an a Stewart potentials 
-use case (see \code{vignette(topic = "StewartExample")}) are proposed in vignettes.
+An introduction to the package conceptual background and usage: \cr
+ - \code{vignette(topic = "SpatialPosition")}\cr
+A Stewart potentials use case:\cr
+ - \code{vignette(topic = "StewartExample")}.
 }
 \seealso{
-\link{stewart}, \link{rasterStewart}, \link{plotStewart}, 
-\link{contourStewart}, \link{huff}, \link{rasterHuff}, \link{plotHuff},\link{reilly}, 
+\link{stewart}, \link{rasterStewart}, \link{plotStewart},  \link{quickStewart}, 
+\link{rasterToContourPoly}, \link{huff}, \link{rasterHuff}, \link{plotHuff},\link{reilly}, 
 \link{rasterReilly}, \link{plotReilly}, 
 \link{CreateGrid}, \link{CreateDistMatrix}.
 }

@@ -17,10 +17,17 @@ contourStewart(x, breaks, mask, type = "line")
 \item{type}{character; "poly" or "line". WARNING: the poly option is experimental (see details). It needs the rgeos package.}
 }
 \value{
-The ouput of the function is a SpatialPolygonsDataFrame (\code{type = "poly"}) or a SpatialLinesDataFrame (\code{type = "line"}).
+The ouput of the function is a SpatialPolygonsDataFrame (\code{type = "poly"}) 
+or a SpatialLinesDataFrame (\code{type = "line"}). 
+The data frame of the outputed SpatialPolygonsDataFrame contains four fields: 
+id (id of each polygon), min and max (minimum and maximum breaks of the polygon), 
+mean (center value of the class)
 }
 \description{
-This function create a SpatialPolygonsDataFrame or SpatialLinesDataFrame contour from the Stewart raster.
+\code{contourStewart} is deprecated. \cr
+To obtain contour lines use \code{\link{rasterToContour}} from raster package. \cr
+To obtain contour polygons use \code{\link{rasterToContourPoly}} from SpatialPosition package. \cr\cr\cr
+This function creates a SpatialPolygonsDataFrame or SpatialLinesDataFrame contour from the Stewart raster.
 }
 \details{
 To obtain a correct SpatialPolygonsDataFrame of potentials follow theses steps: \itemize{
@@ -29,12 +36,14 @@ stewart function. Do not enter an unknownpts layer, set a resolution,
 and set a SpatialPolygonsDataFrame (spmask) as mask.}
 \item{Step 2: Create a raster from the SpatialPointsDataFrame of potentials 
 with the rasterStewart function without using a mask.}
-\item{Step 3: Create the SpatialPolygonsDataFrame of potential with the 
-contourStewart function and use the spamask SpatialPolygonsDataFrame (Step1) as mask.}
+\item{Step 3: Create the SpatialPolygonsDataFrame of potentials with the 
+contourStewart function and use the same spmask SpatialPolygonsDataFrame (Step1) as mask.}
 }
 See also the second example in the examples section.
 }
 \examples{
+data("spatData")
+\dontrun{
 #### Example with type = "line"
 mystewart <- stewart(knownpts = spatPts, varname = "Capacite",
                      typefct = "exponential", span = 1000, beta = 3,
@@ -56,7 +65,6 @@ plot(spatPts, cex = 0.8, pch = 20, col  = "black", add = TRUE)
 
 
 #### Example with type = "poly"
-\dontrun{
 mystewart <- stewart(knownpts = spatPts, varname = "Capacite",
                      typefct = "exponential", span = 1000, beta = 3,
                      resolution = 50, longlat = FALSE,
@@ -90,6 +98,7 @@ par(opar)
 }
 }
 \seealso{
-\link{stewart}, \link{rasterStewart}, \link{plotStewart}, \link{contourStewart}, \link{CreateGrid}, \link{CreateDistMatrix}.
+\link{stewart}, \link{rasterStewart}, \link{plotStewart}, 
+\link{quickStewart}, \link{CreateGrid}, \link{CreateDistMatrix}.
 }
 
