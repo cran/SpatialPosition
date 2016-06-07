@@ -9,7 +9,8 @@ rasterHuff(x, mask = NULL)
 \arguments{
 \item{x}{sp object (SpatialPointsDataFrame); output of the \code{huff} function.}
 
-\item{mask}{sp object (SpatialPolygonsDataFrame); this object is used to clip the raster. (optional)}
+\item{mask}{sp object (SpatialPolygonsDataFrame); this object is used to clip 
+the raster. (optional)}
 }
 \value{
 Raster of catchment areas values.
@@ -24,12 +25,13 @@ data(spatData)
 # grid defined by its resolution
 myhuff <- huff(knownpts = spatPts, varname = "Capacite",
                typefct = "exponential", span = 750, beta = 2,
-               resolution = 50, longlat = FALSE, mask = spatMask)
+               resolution = 100, mask = spatMask)
 # Create a raster of huff values
 myhuffraster <- rasterHuff(x = myhuff, mask = spatMask)
 plot(myhuffraster)
 }
 \seealso{
-\link{huff}, \link{rasterHuff}, \link{plotHuff}, \link{CreateGrid}, \link{CreateDistMatrix}.
+\link{huff}, \link{rasterHuff}, \link{plotHuff}, \link{CreateGrid}, 
+\link{CreateDistMatrix}.
 }
 

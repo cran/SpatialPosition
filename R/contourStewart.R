@@ -25,8 +25,7 @@
 #' contourStewart function and use the same spmask SpatialPolygonsDataFrame (Step1) as mask.}
 #' }
 #' See also the second example in the examples section.
-#' @seealso \link{stewart}, \link{rasterStewart}, \link{plotStewart}, 
-#' \link{quickStewart}, \link{CreateGrid}, \link{CreateDistMatrix}.
+#' @seealso \link{rasterToContourPoly}.
 #' @import sp
 #' @import raster
 #' @examples
@@ -35,7 +34,7 @@
 #' #### Example with type = "line"
 #' mystewart <- stewart(knownpts = spatPts, varname = "Capacite",
 #'                      typefct = "exponential", span = 1000, beta = 3,
-#'                      resolution = 50, longlat = FALSE,
+#'                      resolution = 50,
 #'                      mask = spatMask)
 #' # Create a raster of potentials values
 #' mystewartraster <- rasterStewart(x = mystewart, mask = spatMask)

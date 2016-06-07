@@ -7,7 +7,7 @@
 #' @param resolution numeric; resolution of the grid (in map units). 
 #' @return The output of the function is a SpatialPointsDataFrame of regularly
 #' spaced points with the same extent as \code{w}. 
-#' @seealso \link{CreateDistMatrix}.
+#' @seealso \link{CreateDistMatrix}
 #' @examples 
 #' # Create a SpatialPointsDataFrame grid of spatMask extent and 200 meters 
 #' # resolution
@@ -39,7 +39,7 @@ CreateGrid <- function (w, resolution)
   spatGrid <- data.frame(ID = idSeq, 
                          COORDX = spatGrid[, 1], 
                          COORDY = spatGrid[, 2])
-  
+
   spatGrid <- SpatialPointsDataFrame(coords = spatGrid[ , c(2, 3)], 
                                      data = spatGrid, 
                                      proj4string = CRS(proj4string(w)))
@@ -53,17 +53,16 @@ CreateGrid <- function (w, resolution)
 #' sp objects (SpatialPointsDataFrame or SpatialPolygonsDataFrame).
 #' @param knownpts sp object; rows of the distance matrix.
 #' @param unknownpts sp object; columns of the distance matrix.
-#' @param longlat logical; euclidean distance (FALSE, default) or Great Circle distance (TRUE).
 #' @param bypassctrl logical; bypass the distance matrix size control (see Details).
-#' @details The function returns a full matrix of distances in the metric of the 
-#' points if \code{longlat} is FALSE, or in kilometers if \code{longlat} is TRUE. This is a wrapper
-#' for the \code{\link{spDists}} function. 
+#' @details The function returns a full matrix of distances in meters using the 
+#' Great Circle distance (WGS84 ellipsoid) method. This is a wrapper
+#' for the \code{\link{spDists}} function. \cr.
 #' 
 #' If the matrix to compute is too large (more than 100,000,000 cells or more than 10,000,000 origins or destinations) 
 #' the function sends a confirmation message to warn users about the amount of RAM mobilized. 
 #' Use \code{bypassctrl} = TRUE to skip this control.
 #' @return A distance matrix, row names are \code{knownpts} row names, column names are \code{unknownpts} row names.
-#' @seealso \link{CreateGrid}.
+#' @seealso \link{CreateGrid}
 #' @examples 
 #' # Create a SpatialPointsDataFrame grid of spatMask extent and 200 meters 
 #' # resolution
@@ -71,16 +70,16 @@ CreateGrid <- function (w, resolution)
 #' mygrid <- CreateGrid(w = spatMask, resolution = 200)
 #' # Create a distance matrix between known spatPts and mygrid
 #' mymat <- CreateDistMatrix(knownpts = spatPts, unknownpts = mygrid, 
-#'                           longlat = FALSE, bypassctrl = FALSE)
+#'                           bypassctrl = FALSE)
 #' mymat[1:5,1:5]
 #' nrow(spatPts)
 #' nrow(mygrid)
 #' dim(mymat)
 #' @import sp
+#' @import rgdal
 #' @export
 CreateDistMatrix  <- function(knownpts, 
                               unknownpts, 
-                              longlat = FALSE, 
                               bypassctrl = FALSE)
 {
   TestSp(knownpts)
@@ -114,7 +113,13 @@ CreateDistMatrix  <- function(knownpts,
       }
     }
   }
-  matDist <- spDists(x = knownpts, y = unknownpts, longlat = longlat)
+  
+  matDist <- spDists(x = sp::spTransform(knownpts,"+init=epsg:4326"),
+                     y = sp::spTransform(unknownpts,"+init=epsg:4326"),
+                     longlat = TRUE) * 1000
+  
   dimnames(matDist) <- list(row.names(knownpts), row.names(unknownpts))
   return(round(matDist, digits = 8))
 }
+
+

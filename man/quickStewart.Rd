@@ -47,7 +47,7 @@ interaction function equals 0.5.}
 \item{breaks}{numeric; a vector of values used to discretize the potentials.}
 }
 \value{
-A SpatialPolygonsDataFrame is returned (see \link{contourStewart} Value).
+A SpatialPolygonsDataFrame is returned (see \link{rasterToContourPoly} Value).
 }
 \description{
 This function is a wrapper around \link{stewart}, \link{rasterStewart} 
@@ -72,7 +72,7 @@ pot.spdf <- quickStewart(spdf = spatPts,
 plot(pot.spdf)
 # cartography
 if(require("cartography")){
-  breaks <- c(unique(pot.spdf$min), max(pot.spdf$max))
+  breaks <- sort(c(unique(pot.spdf$min), max(pot.spdf$max)), decreasing = FALSE)
   cartography::choroLayer(spdf = pot.spdf, df = pot.spdf@data,
                           var = "center", breaks = breaks, 
                           legend.pos = "topleft",
@@ -82,8 +82,7 @@ pot.spdf@data
 
 
 # Compute a SpatialPolygonsDataFrame of a ratio of potentials
-spatPts$dummy <- spatPts$Capacite + round(runif(n = nrow(spatPts), 
-                                                min = -6, max = 6), 0)
+spatPts$dummy <- spatPts$Capacite + c(rep(50, 18))
 pot2.spdf <- quickStewart(spdf = spatPts, 
                           df = spatPts@data, 
                           var = "Capacite", 
@@ -92,7 +91,7 @@ pot2.spdf <- quickStewart(spdf = spatPts,
                           beta = 2, mask = spatMask)
 # cartography
 if(require("cartography")){
-  breaks <- c(unique(pot2.spdf$min), max(pot2.spdf$max))
+  breaks <- sort(c(unique(pot2.spdf$min), max(pot2.spdf$max)), decreasing = FALSE)
   cartography::choroLayer(spdf = pot2.spdf, df = pot2.spdf@data,
                           var = "center", breaks = breaks, 
                           legend.pos = "topleft",legend.values.rnd = 3,

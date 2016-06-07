@@ -33,8 +33,7 @@ data("spatData")
 \dontrun{
 mystewart <- stewart(knownpts = spatPts, varname = "Capacite",
                      typefct = "exponential", span = 1000, beta = 3,
-                     resolution = 50, longlat = FALSE,
-                     mask = spatMask)
+                     resolution = 50, mask = spatMask)
 # Create a raster of potentials values
 mystewartraster <- rasterStewart(x = mystewart)
 # Create contour SpatialLinesDataFrame
@@ -42,7 +41,7 @@ contourpoly <- rasterToContourPoly(r = mystewartraster,
                                    nclass = 6,
                                    mask = spatMask)
 # Created breaks
-bks <- unique(c(contourpoly$min, contourpoly$max))
+bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
 # Display the map
 library(cartography)
 opar <- par(mar = c(0,0,1.2,0))

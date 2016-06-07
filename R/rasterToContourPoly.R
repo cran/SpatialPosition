@@ -21,8 +21,7 @@
 #' \dontrun{
 #' mystewart <- stewart(knownpts = spatPts, varname = "Capacite",
 #'                      typefct = "exponential", span = 1000, beta = 3,
-#'                      resolution = 50, longlat = FALSE,
-#'                      mask = spatMask)
+#'                      resolution = 50, mask = spatMask)
 #' # Create a raster of potentials values
 #' mystewartraster <- rasterStewart(x = mystewart)
 #' # Create contour SpatialLinesDataFrame
@@ -30,7 +29,7 @@
 #'                                    nclass = 6,
 #'                                    mask = spatMask)
 #' # Created breaks
-#' bks <- unique(c(contourpoly$min, contourpoly$max))
+#' bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
 #' # Display the map
 #' library(cartography)
 #' opar <- par(mar = c(0,0,1.2,0))
@@ -78,18 +77,32 @@ rasterToContourPoly <- function(r, nclass = 8, breaks = NULL, mask = NULL){
   myres <- raster::res(r)[1]
   myproj <- sp::CRS(sp::proj4string(r))
   
+  
   # extent or mask the raster around the mask
+  if(!is.null(mask)){
+    # Dissolve the mask
+    mask <- rgeos::gUnaryUnion(mask)
+    # Is the mask valid
+    options(warn=-1)
+    if(!rgeos::gIsValid(mask)){
+      mask <- rgeos::gBuffer(mask)
+    }
+    options(warn=0)
+    # mask too big or not valid
+    if(!rgeos::gWithin(mask, masker(r)) || !rgeos::gIsValid(mask)){
+      textx <- "'mask' is not smaller than 'r' or does not have a valid geometry.\nThe contour SpatialPolygonsDataFrame is build without mask."
+      warning(textx, call. = FALSE)
+      mask <- NULL
+    }else{
+      maskbuff <- rgeos::gBuffer(mask, byid = FALSE, width = 5 * myres )
+      r <- raster::mask(r, maskbuff, updatevalue = -1)
+    }
+  }
+  
   if (is.null(mask)){
     mask <- masker(r)
     maskbuff <- rgeos::gBuffer(mask, byid = FALSE, width = 5 * myres )
     r <- raster::extend(r, maskbuff, value=-1)
-  }else{
-    mask <- rgeos::gUnaryUnion(mask)
-    maskbuff <- rgeos::gBuffer(mask, byid = FALSE, width = 5 * myres )
-    r <- raster::mask(r, maskbuff, updatevalue = -1)  
-    # test mask extent
-    if(rgeos::gWithin(masker(r), mask)){stop("mask should be smaller than r",
-                                             call. = FALSE)}
   }
   
   # adjust breaks if necessary
@@ -133,7 +146,7 @@ rasterToContourPoly <- function(r, nclass = 8, breaks = NULL, mask = NULL){
       x <- linex[[j]]@coords
       x <- sp::Polygon(coords =  x, hole = F)
       x <- sp::Polygons(srl = list(x), ID = j)
-      Plist[j] <- x
+      Plist[[j]] <- x
     }  
     x <- sp::SpatialPolygons(Srl = Plist)
     x <- rgeos::union(x = x)
@@ -175,12 +188,47 @@ rasterToContourPoly <- function(r, nclass = 8, breaks = NULL, mask = NULL){
   final <- sp::SpatialPolygonsDataFrame(Sr = final, data = df)
   final@data <- data.frame(id = final$id, x[match(final$id, x$id),2:4])
   final@plotOrder <- 1:nrow(final)
-  return(final)
+  
+  # ring correction
+  df <- unique(final@data[,2:4])
+  df$id <- 1:nrow(df)
+  df <- df[order(df$center, decreasing = T),]
+  
+  z <- rgeos::gIntersection(final[final$center==df[1,3],],
+                            final[final$center==df[1,3],], byid = F,
+                            id = as.character(df[1,4]))
+  for(i in 2:nrow(df)){
+    y <- rgeos::gDifference(final[final$center==df[i,3],],
+                            final[final$center==df[i-1,3],], byid = F, 
+                            id = as.character(df[i,4]))
+    z <- rbind(z, y)
+  }
+  dfx <- data.frame(id = sapply(methods::slot(z, "polygons"), 
+                                methods::slot, "ID"))
+  row.names(dfx) <- dfx$id
+  z <- sp::SpatialPolygonsDataFrame(z, dfx)
+  z@data <- df[match(x=z@data$id, table = df$id),c(4,1:3)]
+  return(z)
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 masker <- function(r){
-  xy <- sp::coordinates(r)[which(!is.na(values(r))),]
+  xy <- sp::coordinates(r)[which(!is.na(raster::values(r))),]
   i <- grDevices::chull(xy)
   b <- xy[c(i,i[1]),]
   mask <- sp::SpatialPolygons(list(sp::Polygons(list(sp::Polygon(b, hole = FALSE)), 

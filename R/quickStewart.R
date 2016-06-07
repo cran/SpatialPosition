@@ -30,7 +30,7 @@
 #' @param nclass	numeric; a targeted number of classes (default to 8). Not used if breaks is set.
 #' @param breaks numeric; a vector of values used to discretize the potentials. 
 #' @param mask SpatialPolygonsDataFrame; mask used to clip contours of potentials.
-#' @return A SpatialPolygonsDataFrame is returned (see \link{contourStewart} Value). 
+#' @return A SpatialPolygonsDataFrame is returned (see \link{rasterToContourPoly} Value). 
 #' @details 
 #' If var2 is provided the ratio between the potentials of var (numerator) 
 #' and var2 (denominator) is computed.
@@ -51,7 +51,7 @@
 #' plot(pot.spdf)
 #' # cartography
 #' if(require("cartography")){
-#'   breaks <- c(unique(pot.spdf$min), max(pot.spdf$max))
+#'   breaks <- sort(c(unique(pot.spdf$min), max(pot.spdf$max)), decreasing = FALSE)
 #'   cartography::choroLayer(spdf = pot.spdf, df = pot.spdf@data,
 #'                           var = "center", breaks = breaks, 
 #'                           legend.pos = "topleft",
@@ -61,8 +61,7 @@
 #' 
 #' 
 #' # Compute a SpatialPolygonsDataFrame of a ratio of potentials
-#' spatPts$dummy <- spatPts$Capacite + round(runif(n = nrow(spatPts), 
-#'                                                 min = -6, max = 6), 0)
+#' spatPts$dummy <- spatPts$Capacite + c(rep(50, 18))
 #' pot2.spdf <- quickStewart(spdf = spatPts, 
 #'                           df = spatPts@data, 
 #'                           var = "Capacite", 
@@ -71,7 +70,7 @@
 #'                           beta = 2, mask = spatMask)
 #' # cartography
 #' if(require("cartography")){
-#'   breaks <- c(unique(pot2.spdf$min), max(pot2.spdf$max))
+#'   breaks <- sort(c(unique(pot2.spdf$min), max(pot2.spdf$max)), decreasing = FALSE)
 #'   cartography::choroLayer(spdf = pot2.spdf, df = pot2.spdf@data,
 #'                           var = "center", breaks = breaks, 
 #'                           legend.pos = "topleft",legend.values.rnd = 3,

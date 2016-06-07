@@ -5,8 +5,7 @@
 \title{Reilly Catchment Areas}
 \usage{
 reilly(knownpts, unknownpts = NULL, matdist = NULL, varname,
-  typefct = "exponential", span, beta, resolution = 2000, longlat = FALSE,
-  mask = NULL)
+  typefct = "exponential", span, beta, resolution = NULL, mask = NULL)
 }
 \arguments{
 \item{knownpts}{sp object (SpatialPointsDataFrame or SpatialPolygonsDataFrame); 
@@ -16,12 +15,15 @@ this is the set of known observations to estimate the catchment areas from.}
 this is the set of unknown units for which the function computes the estimates. 
 Not used when \code{resolution} is set up. (optional)}
 
-\item{matdist}{matrix; a distance matrix. Row names match the first 
-column of the \code{knownpts} object dataframe. Column names match the first column 
-of the \code{unknownpts} object dataframe. (optional)}
+\item{matdist}{matrix; distance matrix between known observations and unknown 
+units for which the function computes the estimates. Row names match the row 
+names of \code{knownpts} and column names match the row names of 
+\code{unknownpts}. \code{matdist} can contain any distance metric (time 
+distance or euclidean distance for example). If \code{matdist} is NULL, Great 
+Circle distances are used (with \code{\link{CreateDistMatrix}}).(optional)}
 
-\item{varname}{character; name of the variable in the \code{knownpts} dataframe from which values are computed.
-Quantitative variable with no negative values.}
+\item{varname}{character; name of the variable in the \code{knownpts} dataframe 
+from which values are computed. Quantitative variable with no negative values.}
 
 \item{typefct}{character; spatial interaction function. Options are "pareto" 
 (means power law) or "exponential".
@@ -39,21 +41,15 @@ interaction function equals 0.5.}
 \item{resolution}{numeric; resolution of the output SpatialPointsDataFrame
 (in map units).}
 
-\item{longlat}{logical; euclidean distance (FALSE, default) or Great Circle distance (TRUE).
-If TRUE inputs are expected in the WGS84 reference system.}
-
 \item{mask}{sp object; the spatial extent of this object is used to 
 create the regularly spaced SpatialPointsDataFrame output. (optional)}
 }
 \value{
-SpatialPointsDataFrame with the computed catchment areas in a new field nammed \code{OUTPUT}.
-Values match the row names of \code{knownpts}
+SpatialPointsDataFrame with the computed catchment areas in a new 
+field named \code{OUTPUT}. Values match the row names of \code{knownpts}.
 }
 \description{
 This function computes the catchment areas as defined by W.J. Reilly (1931).
-}
-\details{
-If \code{unknownpts} is NULL then \code{resolution} must be used.
 }
 \examples{
 # Create a SpatialPointsDataFrame grid of spatMask extent and 200 meters 
@@ -61,20 +57,19 @@ If \code{unknownpts} is NULL then \code{resolution} must be used.
 data(spatData)
 mygrid <- CreateGrid(w = spatMask, resolution = 200)
 # Create a distance matrix between known points (spatPts) and mygrid
-mymat <- CreateDistMatrix(knownpts = spatPts, unknownpts = mygrid, 
-                          longlat = FALSE)
+mymat <- CreateDistMatrix(knownpts = spatPts, unknownpts = mygrid)
 # Compute Reilly catchment areas from known points (spatPts) on a given 
 # grid (mygrid) using a given distance matrix (mymat)
 myreilly2 <- reilly(knownpts = spatPts, unknownpts = mygrid, 
                matdist = mymat, varname = "Capacite", 
                typefct = "exponential", span = 1250, 
-               beta = 3, longlat = FALSE, mask = spatMask)
+               beta = 3, mask = spatMask)
 row.names(spatPts) <- spatPts$CodHop
 # Compute Reilly catchment areas from known points (spatPts) on a 
 # grid defined by its resolution
 myreilly <- reilly(knownpts = spatPts, varname = "Capacite", 
                 typefct = "exponential", span = 1250, beta = 3, 
-                resolution = 200, longlat = FALSE, mask = spatMask)
+                resolution = 200, mask = spatMask)
 # The function output a SpatialPointsDataFrame
 class(myreilly)
 # The OUTPUT field values match knownpts row names
@@ -84,6 +79,7 @@ head(unique(myreilly$OUTPUT))
 REILLY, W. J. (1931) The law of retail gravitation, W. J. Reilly, New York.
 }
 \seealso{
-\link{reilly}, \link{rasterReilly}, \link{plotReilly}, \link{CreateGrid}, \link{CreateDistMatrix}.
+\link{reilly}, \link{rasterReilly}, \link{plotReilly}, \link{CreateGrid}, 
+\link{CreateDistMatrix}.
 }
 
