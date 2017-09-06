@@ -4,7 +4,7 @@
 \alias{CreateDistMatrix}
 \title{Create a Distance Matrix Between Two Sp Objects}
 \usage{
-CreateDistMatrix(knownpts, unknownpts, bypassctrl = FALSE)
+CreateDistMatrix(knownpts, unknownpts, bypassctrl = FALSE, longlat = TRUE)
 }
 \arguments{
 \item{knownpts}{sp object; rows of the distance matrix.}
@@ -12,21 +12,27 @@ CreateDistMatrix(knownpts, unknownpts, bypassctrl = FALSE)
 \item{unknownpts}{sp object; columns of the distance matrix.}
 
 \item{bypassctrl}{logical; bypass the distance matrix size control (see Details).}
+
+\item{longlat}{logical; if FALSE, Euclidean distance, if TRUE Great Circle 
+(WGS84 ellipsoid) distance.}
 }
 \value{
-A distance matrix, row names are \code{knownpts} row names, column names are \code{unknownpts} row names.
+A distance matrix, row names are \code{knownpts} row names, column 
+names are \code{unknownpts} row names.
 }
 \description{
 This function creates a distance matrix between two 
 sp objects (SpatialPointsDataFrame or SpatialPolygonsDataFrame).
 }
 \details{
-The function returns a full matrix of distances in meters using the 
-Great Circle distance (WGS84 ellipsoid) method. This is a wrapper
-for the \code{\link{spDists}} function. \cr.
+The function returns a full matrix of distances in meters. 
+This is a wrapper
+for the \code{\link{spDists}} function. \cr
 
-If the matrix to compute is too large (more than 100,000,000 cells or more than 10,000,000 origins or destinations) 
-the function sends a confirmation message to warn users about the amount of RAM mobilized. 
+If the matrix to compute is too large (more than 100,000,000 cells, more than 
+10,000,000 origins or more than 10,000,000 destinations) 
+the function sends a confirmation message to warn users about the amount of 
+RAM mobilized. 
 Use \code{bypassctrl} = TRUE to skip this control.
 }
 \examples{
@@ -35,8 +41,7 @@ Use \code{bypassctrl} = TRUE to skip this control.
 data(spatData)
 mygrid <- CreateGrid(w = spatMask, resolution = 200)
 # Create a distance matrix between known spatPts and mygrid
-mymat <- CreateDistMatrix(knownpts = spatPts, unknownpts = mygrid, 
-                          bypassctrl = FALSE)
+mymat <- CreateDistMatrix(knownpts = spatPts, unknownpts = mygrid)
 mymat[1:5,1:5]
 nrow(spatPts)
 nrow(mygrid)
@@ -45,4 +50,3 @@ dim(mymat)
 \seealso{
 \link{CreateGrid}
 }
-

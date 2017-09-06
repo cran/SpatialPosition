@@ -5,7 +5,8 @@
 \title{Huff Catchment Areas}
 \usage{
 huff(knownpts, unknownpts = NULL, matdist = NULL, varname,
-  typefct = "exponential", span, beta, resolution = NULL, mask = NULL)
+  typefct = "exponential", span, beta, resolution = NULL, mask = NULL,
+  bypassctrl = FALSE, longlat = TRUE)
 }
 \arguments{
 \item{knownpts}{sp object (SpatialPointsDataFrame or SpatialPolygonsDataFrame); 
@@ -19,8 +20,8 @@ Not used when \code{resolution} is set up. (optional)}
 units for which the function computes the estimates. Row names match the row 
 names of \code{knownpts} and column names match the row names of 
 \code{unknownpts}. \code{matdist} can contain any distance metric (time 
-distance or euclidean distance for example). If \code{matdist} is NULL, Great 
-Circle distances are used (with \code{\link{CreateDistMatrix}}).(optional)}
+distance or euclidean distance for example). If \code{matdist} is NULL, the distance 
+matrix is built with \code{\link{CreateDistMatrix}}. (optional)}
 
 \item{varname}{character; name of the variable in the \code{knownpts} dataframe 
 from which values are computed. Quantitative variable with no negative values.}
@@ -39,10 +40,17 @@ interaction function equals 0.5.}
 \item{beta}{numeric; impedance factor for the spatial interaction function.}
 
 \item{resolution}{numeric; resolution of the output SpatialPointsDataFrame
-(in map units).}
+(in map units). If resolution is not set, the grid will contain around 
+7250 points. (optional)}
 
 \item{mask}{sp object; the spatial extent of this object is used to 
 create the regularly spaced SpatialPointsDataFrame output. (optional)}
+
+\item{bypassctrl}{logical; bypass the distance matrix size control (see 
+\code{\link{CreateDistMatrix}} Details).}
+
+\item{longlat}{logical; if FALSE, Euclidean distance, if TRUE Great Circle 
+(WGS84 ellipsoid) distance.}
 }
 \value{
 SpatialPointsDataFrame with the computed catchment areas in a new 
@@ -50,9 +58,6 @@ field named \code{OUTPUT}.
 }
 \description{
 This function computes the catchment areas as defined by D. Huff (1964).
-}
-\details{
-If \code{unknownpts} is NULL then \code{resolution} must be used.
 }
 \examples{
 # Create a SpatialPointsDataFrame grid of spatMask extent and 200 meters 
@@ -84,4 +89,3 @@ HUFF D. (1964) Defining and Estimating a Trading Area. Journal of Marketing, 28:
 \link{huff}, \link{rasterHuff}, \link{plotHuff}, \link{CreateGrid}, 
 \link{CreateDistMatrix}.
 }
-
