@@ -1,5 +1,7 @@
 ## ----regionalmap, fig.width=7, fig.height=6------------------------------
 library(cartography)
+library(sp)
+library(sf)
 library(SpatialPosition)
 data(nuts2006)
 
@@ -53,7 +55,8 @@ poppot <- stewart(knownpts = nuts3.spdf,
                   varname = "pop2008", 
                   typefct = "exponential", 
                   beta = 2, 
-                  span = 75000)
+                  span = 75000,
+                  returnclass = "sf")
 
 # Compute the potentials of GDP per units
 # function = exponential, beta = 2, span = 75 km
@@ -63,7 +66,8 @@ gdppot <- stewart(knownpts = nuts3.spdf,
                   varname = "gdppps2008", 
                   typefct = "exponential", 
                   beta = 2,
-                  span = 75000)
+                  span = 75000, 
+                  returnclass = "sf")
 
 # Create a data frame of potential GDP per capita
 pot <- data.frame(id = nuts3.df$id, 
@@ -111,7 +115,8 @@ poppot <- stewart(knownpts = nuts3.spdf,
                   span = 75000, 
                   beta = 2, 
                   resolution = 50000, 
-                  mask = nuts0.spdf)
+                  mask = nuts0.spdf, 
+                  returnclass = "sf")
 
 # Compute the potentials of GDP on a regular grid (50km span)
 # function = exponential, beta = 2, span = 75 km
@@ -121,22 +126,20 @@ gdppot <- stewart(knownpts = nuts3.spdf,
                   span = 75000, 
                   beta = 2, 
                   resolution = 50000, 
-                  mask = nuts0.spdf)
+                  mask = nuts0.spdf, 
+                  returnclass = "sf")
 
-# Transform the regularly spaced SpatialPointsDataFrame to a raster
-popras <- rasterStewart(poppot)
-gdpras <- rasterStewart(gdppot)
+# Create the ratio variable
+poppot$OUTPUT2 <- gdppot$OUTPUT * 1e6 / poppot$OUTPUT
 
-# Compute the GDP per capita 
-ras <- gdpras * 1000000 / popras
-
-# Create a SpatialPolygonsDataFrame from the raster
-pot.spdf <- rasterToContourPoly(r = ras, 
-                                breaks = bv, 
-                                mask = nuts0.spdf)
+# Create an isopleth layer
+pot <- isopoly(x = poppot, var = "OUTPUT2",
+               breaks = bv, 
+               mask = nuts0.spdf, 
+               returnclass = "sf")
 
 # Get breaks values
-bv3 <- sort(c(unique(pot.spdf$min), max(pot.spdf$max)), decreasing = FALSE)
+bv3 <- sort(c(unique(pot$min), max(pot$max)), decreasing = FALSE)
 
 # Draw the map
 par <- par(mar = c(0,0,1.2,0))
@@ -146,7 +149,7 @@ plot(nuts0.spdf, add = F, border = NA, bg = "#cdd2d4")
 plot(world.spdf, col = "#f5f5f3ff", border = "#a9b3b4ff", add = TRUE)
 
 # Map the potential GDP per Capita
-choroLayer(spdf = pot.spdf, df = pot.spdf@data, var = "center", 
+choroLayer(x = pot, var = "center", 
            legend.pos = "topright",
            breaks = bv3, col = pal, add=T, 
            border = NA, lwd = 0.2,

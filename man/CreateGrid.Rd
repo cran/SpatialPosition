@@ -2,32 +2,36 @@
 % Please edit documentation in R/gridandmat.R
 \name{CreateGrid}
 \alias{CreateGrid}
-\title{Create a Regularly Spaced SpatialPointsDataFrame}
+\title{Create a Regularly Spaced Points Grid}
 \usage{
-CreateGrid(w, resolution)
+CreateGrid(w, resolution, returnclass = "sp")
 }
 \arguments{
-\item{w}{sp object; the spatial extent of this object is used to 
-create the regular SpatialPointsDataFrame.}
+\item{w}{sp or sf object; the spatial extent of this object is used to 
+create the regular grid.}
 
 \item{resolution}{numeric; resolution of the grid (in map units). If 
 resolution is not set, the grid will contain around 7500 points. (optional)}
+
+\item{returnclass}{"sp" or "sf"; class of the returned object.}
 }
 \value{
-The output of the function is a SpatialPointsDataFrame of regularly
-spaced points with the same extent as \code{w}.
+The output of the function is a regularly spaced points grid
+ with the extent of \code{w}.
 }
 \description{
-This function creates a regular grid of SpatialPointsDataFrame 
-from the extent of a given sp object and a given resolution.
+This function creates a regular grid of points 
+from the extent of a given spatial object and a given resolution.
 }
 \examples{
-# Create a SpatialPointsDataFrame grid of spatMask extent and 200 meters 
+# Create a grid of paris extent and 200 meters
 # resolution
-data(spatData)
-mygrid <- CreateGrid(w = spatMask, resolution = 200)
-plot(mygrid, cex = 0.1, pch = ".")
-plot(spatMask, border="red", lwd = 2, add = TRUE)
+library(SpatialPosition)
+library(sf)
+data(hospital)
+mygrid <- CreateGrid(w = paris, resolution = 200, returnclass = "sf")
+plot(st_geometry(mygrid), cex = 0.1, pch = ".")
+plot(st_geometry(paris), border="red", lwd = 2, add = TRUE)
 }
 \seealso{
 \link{CreateDistMatrix}

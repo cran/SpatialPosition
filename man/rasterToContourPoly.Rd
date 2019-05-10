@@ -23,6 +23,7 @@ id (id of each polygon), min and max (minimum and maximum breaks of the polygon)
 center (central values of classes)
 }
 \description{
+Deprecated. 
 This function creates a contour SpatialPolygonsDataFrame from a raster.
 }
 \details{
@@ -44,6 +45,7 @@ contourpoly <- rasterToContourPoly(r = mystewartraster,
 bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
 # Display the map
 library(cartography)
+library(sp)
 opar <- par(mar = c(0,0,1.2,0))
 choroLayer(spdf = contourpoly,
            df = contourpoly@data,
@@ -62,6 +64,5 @@ par(opar)
 }
 }
 \seealso{
-\link{stewart}, \link{rasterStewart}, \link{plotStewart}, 
-\link{quickStewart}, \link{CreateGrid}, \link{CreateDistMatrix}.
+\link{stewart}, \link{rasterStewart}.
 }

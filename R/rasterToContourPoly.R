@@ -1,6 +1,7 @@
 #' @title Create a SpatialPolygonsDataFrame from a Raster
 #' @name rasterToContourPoly
 #' @description 
+#' Deprecated. 
 #' This function creates a contour SpatialPolygonsDataFrame from a raster.
 #' @param r raster; the raster must contain only positive values.
 #' @param nclass numeric; a number of class.
@@ -12,8 +13,7 @@
 #' id (id of each polygon), min and max (minimum and maximum breaks of the polygon), 
 #' center (central values of classes)
 #' @details This function uses the rgeos package.
-#' @seealso \link{stewart}, \link{rasterStewart}, \link{plotStewart}, 
-#' \link{quickStewart}, \link{CreateGrid}, \link{CreateDistMatrix}.
+#' @seealso \link{stewart}, \link{rasterStewart}.
 #' @import sp
 #' @import raster
 #' @examples
@@ -32,6 +32,7 @@
 #' bks <- sort(unique(c(contourpoly$min, contourpoly$max)))
 #' # Display the map
 #' library(cartography)
+#' library(sp)
 #' opar <- par(mar = c(0,0,1.2,0))
 #' choroLayer(spdf = contourpoly,
 #'            df = contourpoly@data,
@@ -50,6 +51,7 @@
 #' }
 #' @export
 rasterToContourPoly <- function(r, nclass = 8, breaks = NULL, mask = NULL){
+  .Deprecated(new = "isopoly", package = "SpatialPosition" )
   breaks <- get_bks(r = r, nclass =  nclass, breaks = breaks)
   res <- get_mask(r, mask)
   res2 <- adjust_bks(r = res$r, breaks = breaks)
@@ -163,7 +165,7 @@ get_poly <- function(r, breaks, finalBreaks){
       Plist[[j]] <- sp::Polygons(srl = list(sp::Polygon(coords = linex[[j]]@coords, 
                                                         hole = F)), ID = j)
     }  
-    x <- rgeos::union(x = sp::SpatialPolygons(Srl = Plist))
+    x <- raster::union(x = sp::SpatialPolygons(Srl = Plist))
     
     if (class(x) != "SpatialPolygonsDataFrame"){
       x <- sp::SpatialPolygonsDataFrame(Sr = x, 
