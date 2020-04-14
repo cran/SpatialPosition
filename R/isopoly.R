@@ -17,10 +17,9 @@
 #' center (central values of classes).
 #' @seealso \link{stewart}.
 #' @importFrom sf st_as_sf st_crs st_bbox st_cast st_sf st_sfc st_intersection 
-#' st_union st_agr<- st_collection_extract
+#' st_union st_agr<- st_collection_extract st_make_valid
 #' @importFrom isoband isobands iso_to_sfg
 #' @importFrom methods is
-#' @importFrom lwgeom st_make_valid
 #' @examples
 #' data(hospital)
 #' # Compute Stewart potentials
@@ -86,7 +85,10 @@ isopoly <- function(x, nclass = 8, breaks, mask,
   iso$center = iso$min + (iso$max - iso$min) / 2
   
   
+  
   st_geometry(iso) <- st_make_valid(st_geometry(iso))
+
+  
   if(methods::is(st_geometry(iso),"sfc_GEOMETRY")){
     st_geometry(iso) <-   st_collection_extract(st_geometry(iso), "POLYGON")
   }
@@ -94,7 +96,7 @@ isopoly <- function(x, nclass = 8, breaks, mask,
   if(!missing(mask)){
     if(is(mask, "Spatial")){mask <- st_as_sf(mask)}
     st_agr(iso) <- "constant"
-    iso <- st_cast(st_intersection(x = iso, y = st_union(mask)))
+    iso <- st_cast(st_intersection(x = iso, y = st_union(st_geometry(mask))))
   }
   if(returnclass=="sp"){iso <- as(iso, "Spatial")}
   return(iso)

@@ -19,7 +19,7 @@ Modeling spatial interactions is used to understand and quantify the level of in
 2. Corresponent **mathematical formalization**: $T_{ij} = S_i D_j / d_{ij}^2$ the trade flow between units *i* and *j* ($T_{ij}$) is proportional to the supply of unit *i* ($S_i$) and the demand of unit *j* ($D_j$) and inversely proportional to the squared distance between both units ($d_{ij}^2$).
 3. **Informatic formalization** of the model: language, algorithms, etc.
 
-The most ancient and common spatial interactions model is of the gravity form (like below). It has roots in the late 19st century (Casey, Ravenstein) and has been used in several fields (geography, economy, demography) to model a high variety of flows (commuting, trade, migrations). A brief presentation can be found in the [Geography of transport systems](http://people.hofstra.edu/geotrans/eng/methods/ch5m1en.html). For a detailed one see, among many others, the book of Fotheringham and O'Kelly, *Spatial Interaction Models: Formulations and Applications* (Kluwer Academic Publishers, 1989). 
+The most ancient and common spatial interactions model is of the gravity form (like below). It has roots in the late 19st century (Casey, Ravenstein) and has been used in several fields (geography, economy, demography) to model a high variety of flows (commuting, trade, migrations). A brief presentation can be found in the [Geography of transport systems](https://transportgeography.org/?page_id=8565). For a detailed one see, among many others, the book of Fotheringham and O'Kelly, *Spatial Interaction Models: Formulations and Applications* (Kluwer Academic Publishers, 1989). 
 
 ### Place-based models: Stewart, Reilly, Huff
 
@@ -117,7 +117,7 @@ rasterCatch <- rasterReilly(x = catchReilly, mask = paris)
 par(mar = c(4,2,2,1))
 # Plot the raster and add the points
 plotReilly(x = rasterCatch)
-plot(hospital, pch = 20, add = TRUE)
+plot(st_geometry(hospital), pch = 20, add = TRUE)
 
 mtext("Catchment Areas of Public Hospitals", side = 3,cex = 1.5)
 mtext(text = "distance function: exponential, span = 0.75 km, beta = 2",
@@ -141,7 +141,7 @@ rasterCatch <- rasterHuff(x = catchHuff, mask = paris)
 # Plot the raster and add the points
 par(mar = c(4,2,2,1))
 plotHuff(x = rasterCatch)
-plot(hospital, pch = 20, col = "red", add = TRUE)
+plot(st_geometry(hospital), pch = 20, col = "red", add = TRUE)
 
 mtext("Probabilistic Catchment Areas \nof Public Hospitals", 
       side = 3,cex = 1.5, line=-1.5)
