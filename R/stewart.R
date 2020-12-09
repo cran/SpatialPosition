@@ -69,6 +69,11 @@
 stewart <- function(knownpts,unknownpts, matdist, varname, 
                     typefct = "exponential", span, beta, resolution, mask, 
                     bypassctrl = FALSE, longlat = TRUE,  returnclass = "sp"){
+  .Deprecated(new = "potential", package = "potential", 
+              msg = paste0("stewart(), rasterStewart(), plotStewart(), ",
+              "quickStewart(), isopoly(), mcStewart() and smoothy() ", 
+              "are deprecated. Use 'potential' package for all ", 
+              "potential-related functions."))
   res <- prepdata(knownpts = knownpts, unknownpts = unknownpts, 
                   matdist = matdist, bypassctrl = bypassctrl, longlat = longlat,
                   mask = mask, resolution = resolution) 
@@ -78,7 +83,7 @@ stewart <- function(knownpts,unknownpts, matdist, varname,
                                   varname = varname)
   unknownpts <- ComputePotentials(unknownpts = res$unknownpts, 
                                   matopport = matopport)
-  if(returnclass=="sp"){unknownpts <- as(unknownpts, "Spatial")}
+  if(returnclass=="sp"){unknownpts <- suppressWarnings(as(unknownpts, "Spatial"))}
   return(unknownpts)
 }
 
@@ -93,7 +98,7 @@ stewart <- function(knownpts,unknownpts, matdist, varname,
 #' the raster. (optional)
 #' @return Raster of potential values.
 #' @seealso \link{stewart}, \link{quickStewart}, \link{plotStewart}, 
-#' \link{rasterToContourPoly}, \link{CreateGrid}, \link{CreateDistMatrix}.
+#' \link{CreateGrid}, \link{CreateDistMatrix}.
 #' @examples
 #' library(raster)
 #' data(hospital)
@@ -109,12 +114,12 @@ stewart <- function(knownpts,unknownpts, matdist, varname,
 #' @import raster
 #' @export
 rasterStewart <- function(x, mask = NULL){
-  if(is(x, "sf")){x <- as(x, "Spatial")}
+  if(is(x, "sf")){x <- suppressWarnings(as(x, "Spatial"))}
   gridded(x) <- TRUE
   r <- raster(x)
   rasterx <- rasterize(x[!is.na(x$OUTPUT),], r, field = 'OUTPUT')
   if(!is.null(mask)){
-    if(is(mask, "sf")){mask <- as(mask, "Spatial")}
+    if(is(mask, "sf")){mask <- suppressWarnings(as(mask, "Spatial"))}
     projError(x, mask)
     rasterx <- mask(rasterx, mask = mask)
   }
@@ -140,7 +145,7 @@ rasterStewart <- function(x, mask = NULL){
 #' @param col function; color ramp function, such as \code{\link{colorRampPalette}}.
 #' @return Display the raster nicely and return the list of break values (invisible).
 #' @seealso \link{stewart}, \link{rasterStewart}, \link{quickStewart}, 
-#' \link{rasterToContourPoly}, \link{CreateGrid}, \link{CreateDistMatrix}.
+#' \link{CreateGrid}, \link{CreateDistMatrix}.
 #' @examples 
 #' data(hospital)
 #' # Compute Stewart potentials from known points (hospital) on a

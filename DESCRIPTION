@@ -1,9 +1,9 @@
 Package: SpatialPosition
 Title: Spatial Position Models
-Version: 2.0.1
-Date: 2020-04-14
+Version: 2.1.0
 Authors@R: c(
-      person("Timothée", "Giraud", email = "timothee.giraud@cnrs.fr", role = c("cre","aut")),
+      person("Timothée", "Giraud", email = "timothee.giraud@cnrs.fr", role = c("cre","aut"),
+             comment = c(ORCID = "0000-0002-1932-3323")),
       person("Hadrien", "Commenges", email = "hadrien.commenges@univ-paris1.fr", role = c("aut")), 
       person("Joël", "Boulier", email = "joel.boulier@univ-paris1.fr", role = c("ctb")))
 Description: Computes spatial position models: Stewart potentials, Reilly
@@ -11,20 +11,19 @@ Description: Computes spatial position models: Stewart potentials, Reilly
 Depends: R (>= 3.5.0)
 License: GPL-3
 LazyData: true
-Imports: sf, sp, grDevices, graphics, methods, rgeos, isoband, raster
+Imports: sf, sp, grDevices, graphics, methods, isoband, raster
 Suggests: lwgeom, parallel, doParallel, foreach, cartography, knitr,
         rmarkdown
-SystemRequirements: GDAL (>= 2.0.1), GEOS (>= 3.4.0), PROJ.4 (>= 4.8.0)
 URL: https://github.com/Groupe-ElementR/SpatialPosition
 BugReports: https://github.com/Groupe-ElementR/SpatialPosition/issues
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2020-04-14 09:34:03 UTC; tim
-Author: Timothée Giraud [cre, aut],
+Packaged: 2020-12-09 15:36:13 UTC; tim
+Author: Timothée Giraud [cre, aut] (<https://orcid.org/0000-0002-1932-3323>),
   Hadrien Commenges [aut],
   Joël Boulier [ctb]
 Maintainer: Timothée Giraud <timothee.giraud@cnrs.fr>
 Repository: CRAN
-Date/Publication: 2020-04-14 10:30:02 UTC
+Date/Publication: 2020-12-09 16:10:02 UTC

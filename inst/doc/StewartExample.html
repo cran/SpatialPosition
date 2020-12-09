@@ -288,8 +288,14 @@ poppot &lt;- stewart(knownpts = nuts3.spdf,
                   beta = 2, 
                   span = 75000,
                   returnclass = &quot;sf&quot;)
+</code></pre>
 
-# Compute the potentials of GDP per units
+<pre><code>## Warning: stewart(), rasterStewart(), plotStewart(), quickStewart(), isopoly(),
+## mcStewart() and smoothy() are deprecated. Use &#39;potential&#39; package for all
+## potential-related functions.
+</code></pre>
+
+<pre><code class="r"># Compute the potentials of GDP per units
 # function = exponential, beta = 2, span = 75 km
 gdppot &lt;- stewart(knownpts = nuts3.spdf, 
                   unknownpts = nuts3.spdf, 
@@ -299,8 +305,14 @@ gdppot &lt;- stewart(knownpts = nuts3.spdf,
                   beta = 2,
                   span = 75000, 
                   returnclass = &quot;sf&quot;)
+</code></pre>
 
-# Create a data frame of potential GDP per capita
+<pre><code>## Warning: stewart(), rasterStewart(), plotStewart(), quickStewart(), isopoly(),
+## mcStewart() and smoothy() are deprecated. Use &#39;potential&#39; package for all
+## potential-related functions.
+</code></pre>
+
+<pre><code class="r"># Create a data frame of potential GDP per capita
 pot &lt;- data.frame(id = nuts3.df$id, 
                   gdpcap = gdppot$OUTPUT * 1000000 / poppot$OUTPUT, 
                   stringsAsFactors = FALSE)
@@ -358,8 +370,14 @@ poppot &lt;- stewart(knownpts = nuts3.spdf,
                   resolution = 50000, 
                   mask = nuts0.spdf, 
                   returnclass = &quot;sf&quot;)
+</code></pre>
 
-# Compute the potentials of GDP on a regular grid (50km span)
+<pre><code>## Warning: stewart(), rasterStewart(), plotStewart(), quickStewart(), isopoly(),
+## mcStewart() and smoothy() are deprecated. Use &#39;potential&#39; package for all
+## potential-related functions.
+</code></pre>
+
+<pre><code class="r"># Compute the potentials of GDP on a regular grid (50km span)
 # function = exponential, beta = 2, span = 75 km
 gdppot &lt;- stewart(knownpts = nuts3.spdf, 
                   varname = &quot;gdppps2008&quot;, 
@@ -369,8 +387,14 @@ gdppot &lt;- stewart(knownpts = nuts3.spdf,
                   resolution = 50000, 
                   mask = nuts0.spdf, 
                   returnclass = &quot;sf&quot;)
+</code></pre>
 
-# Create the ratio variable
+<pre><code>## Warning: stewart(), rasterStewart(), plotStewart(), quickStewart(), isopoly(),
+## mcStewart() and smoothy() are deprecated. Use &#39;potential&#39; package for all
+## potential-related functions.
+</code></pre>
+
+<pre><code class="r"># Create the ratio variable
 poppot$OUTPUT2 &lt;- gdppot$OUTPUT * 1e6 / poppot$OUTPUT
 
 # Create an isopleth layer
